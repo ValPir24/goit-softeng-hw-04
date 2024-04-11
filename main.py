@@ -57,7 +57,7 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_error(400, 'Bad Request')
 
     def save_to_storage(self, message_data):
-        with open(STORAGE_PATH, 'r') as file:
+        with open(STORAGE_PATH, 'r+') as file:
             try:
                 storage_data = json.load(file)
             except json.JSONDecodeError:
