@@ -62,9 +62,13 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 storage_data = json.load(file)
             except json.JSONDecodeError:
                 storage_data = {}
-        storage_data.update(message_data)
-        with open(STORAGE_PATH, 'w') as file:
-            json.dump(storage_data, file)
+            # Зміщуємо позицію файлової позиції на початок файлу
+            file.seek(0)
+            # Оновлюємо зчитані дані
+            storage_data.update(message_data)
+            # Записуємо оновлені дані в початок файлу
+            file.truncate(0)
+            file.write(json.dumps(storage_data))
 
 # Socket Server Handler
 class SocketHandler(socketserver.BaseRequestHandler):
@@ -79,14 +83,18 @@ class SocketHandler(socketserver.BaseRequestHandler):
         self.save_to_storage(message_data)
 
     def save_to_storage(self, message_data):
-        with open(STORAGE_PATH, 'r') as file:
+        with open(STORAGE_PATH, 'r+') as file:
             try:
                 storage_data = json.load(file)
             except json.JSONDecodeError:
                 storage_data = {}
-        storage_data.update(message_data)
-        with open(STORAGE_PATH, 'w') as file:
-            json.dump(storage_data, file)
+            # Зміщуємо позицію файлової позиції на початок файлу
+            file.seek(0)
+            # Оновлюємо зчитані дані
+            storage_data.update(message_data)
+            # Записуємо оновлені дані в початок файлу
+            file.truncate(0)
+            file.write(json.dumps(storage_data))
 
 # HTTP Server Thread
 def http_server_thread():
